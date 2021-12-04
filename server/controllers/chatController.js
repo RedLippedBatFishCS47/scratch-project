@@ -1,6 +1,7 @@
 const { response } = require('express');
 const db = require('../models/userModel');
 const uuid = require('uuid');
+const { terserMinify } = require('terser-webpack-plugin');
 
 const chatController = {};
 
@@ -20,9 +21,9 @@ chatController.getMessages = (req, res, next) => {
 
 chatController.postMessages = (req, res, next) => {
   console.log('We are in the post messages controller');
-  const text = `INSERT into messages (username, content, time_stamp) VALUES($1, $2, $3);`;
+  const text = `INSERT into messages (username, content, time_stamp, session_id) VALUES($1, $2, $3, $4);`;
   const creation_date = new Date().toLocaleString();
-  const values = [req.body.username, req.body.content, creation_date];
+  const values = [req.body.username, req.body.content, creation_date, req.cookies.session_id];
 
   db.query(text, values)
     .then((response) => {
@@ -68,8 +69,9 @@ chatController.deleteMessage = (req, res, next) => {
 
 chatController.setIfNotExistSessionCookie = (req, res, next) => {
   if (!req.cookies.session_id) {
-    res.cookie('session', uuid.v4(), {
+    res.cookie('session_id', uuid.v4(), {
       httpOnly: true,
+      secure: true,
     });
   }
   next();
@@ -77,7 +79,7 @@ chatController.setIfNotExistSessionCookie = (req, res, next) => {
 
 chatController.authenticateSessionCookie = (req, res, next) => {
   if (!req.cookies.session_id) {
-    return next("Permission denied");
+    return next(new Error("Permission denied"));
   }
   const text = `
     SELECT * FROM messages
@@ -91,7 +93,7 @@ chatController.authenticateSessionCookie = (req, res, next) => {
         return next();
       }
       else {
-        return next("Permission denied");
+        return next(new Error("Permission denied"));
       }
     })
     .catch((err) => {
