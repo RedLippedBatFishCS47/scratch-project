@@ -51,7 +51,7 @@ chatController.deleteMessage = (req, res, next) => {
 
 chatController.setIfNotExistSessionCookie = (req, res, next) => {
   if (!req.cookies.session_id) {
-    res.cookie('session', uuid.v4() {
+    res.cookie('session', uuid.v4(), {
       httpOnly: true,
     });
   }
