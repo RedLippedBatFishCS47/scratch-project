@@ -1,7 +1,5 @@
-const { response } = require('express');
 const db = require('../models/userModel');
 const uuid = require('uuid');
-const { terserMinify } = require('terser-webpack-plugin');
 
 const chatController = {};
 
