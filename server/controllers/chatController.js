@@ -10,9 +10,9 @@ chatController.getMessages = (req, res, next) => {
     .then((response) => {
       res.locals.messages = response.rows.map(entry => {
         const permission = entry.session_id === req.cookies.session_id;
-        console.log(req.cookies.session_id, entry.session_id, permission);
-        const { content, time_stamp, username } = entry;
+        const { id, content, time_stamp, username } = entry;
         return {
+          id,
           content,
           time_stamp,
           username,
