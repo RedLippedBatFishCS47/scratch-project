@@ -6,3 +6,4 @@ CREATE TABLE messages(
   time_stamp timestamptz,
   session_id uuid
 );
+
