@@ -10,7 +10,7 @@ router.get('/', chatController.getMessages, (req, res) => {
 
 // Adds new message from request to DB and respond with the new message
 router.post('/', chatController.postMessages, (req, res) => {
-  res.sendStatus(200);
+  res.status(200).redirect('/');
 });
 
 // Update a message in the DB and respond with the updated message
