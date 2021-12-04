@@ -5,10 +5,10 @@ const chatController = {};
 
 chatController.getMessages = (req, res, next) => {
   console.log('We are in the get messages controller');
-  const text = `SELECT * FROM messages`;
+  const text = `SELECT * FROM messages;`;
   db.query(text)
     .then((response) => {
-      res.locals.messages = response.row;
+      res.locals.messages = response.rows;
       next();
     })
     .catch((err) => {
@@ -19,12 +19,17 @@ chatController.getMessages = (req, res, next) => {
 
 chatController.postMessages = (req, res, next) => {
   console.log('We are in the post messages controller');
-  const text = `INSERT into messages (id, user, content, time_stamp) VALUES($1, $2, $3, $4),`;
+  const text = `INSERT into messages (id, username, content, time_stamp) VALUES($1, $2, $3, $4);`;
   const creation_date = new Date().toLocaleString();
-  const values = [req.body.id, req.body.user, req.body.content, creation_date];
+  const values = [
+    req.body.id,
+    req.body.username,
+    req.body.content,
+    creation_date,
+  ];
 
   db.query(text, values)
-    .then((repsonse) => {
+    .then((response) => {
       next();
     })
     .catch((err) => {
@@ -33,13 +38,13 @@ chatController.postMessages = (req, res, next) => {
     });
 };
 
-chatController.deleteMessage = (req, rescape, next) => {
+chatController.deleteMessage = (req, res, next) => {
   console.log('We are in the delete message controller');
-  const text = `DELETE FROM messages WHERE id=$1`;
-  const values = [req.body.id];
+  const text = `DELETE FROM messages WHERE id=$1;`;
+  const values = [req.params.message_id];
 
   db.query(text, values)
-    .then((repsonse) => {
+    .then((response) => {
       next();
     })
     .catch((err) => {

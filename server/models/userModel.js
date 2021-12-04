@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 require('dotenv').config();
 
-const pool = new Pool({ connectionString: DB_URI });
+const pool = new Pool({ connectionString: process.env.DB_URI });
 
 module.exports = {
   query: (text, params, callback) => {
