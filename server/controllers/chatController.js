@@ -8,7 +8,17 @@ chatController.getMessages = (req, res, next) => {
   const text = `SELECT * FROM messages;`;
   db.query(text)
     .then((response) => {
-      res.locals.messages = response.rows;
+      res.locals.messages = response.rows.map(entry => {
+        const permission = entry.session_id === req.cookies.session_id;
+        console.log(req.cookies.session_id, entry.session_id, permission);
+        const { content, time_stamp, username } = entry;
+        return {
+          content,
+          time_stamp,
+          username,
+          permission,
+        };
+      });
       next();
     })
     .catch((err) => {
