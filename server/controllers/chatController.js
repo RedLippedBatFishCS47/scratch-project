@@ -8,15 +8,16 @@ chatController.getMessages = (req, res, next) => {
   const text = `SELECT * FROM messages;`;
   db.query(text)
     .then((response) => {
-      res.locals.messages = response.rows.map(entry => {
+      res.locals.messages = response.rows.map((entry) => {
         const permission = entry.session_id === req.cookies.session_id;
-        const { id, content, time_stamp, username } = entry;
+        const { id, content, time_stamp, username, edit } = entry;
         return {
           id,
           content,
           time_stamp,
           username,
           permission,
+          edit,
         };
       });
       next();
@@ -31,7 +32,12 @@ chatController.postMessages = (req, res, next) => {
   console.log('We are in the post messages controller');
   const text = `INSERT into messages (username, content, time_stamp, session_id) VALUES($1, $2, $3, $4);`;
   const creation_date = new Date().toLocaleString();
-  const values = [req.body.username, req.body.content, creation_date, req.cookies.session_id];
+  const values = [
+    req.body.username,
+    req.body.content,
+    creation_date,
+    req.cookies.session_id,
+  ];
 
   db.query(text, values)
     .then((response) => {
@@ -54,11 +60,11 @@ chatController.updateMessage = (req, res, next) => {
       res.locals.updatedMessage = response.rows;
       next();
     })
-  .catch((err) => {
+    .catch((err) => {
       console.error(err);
       next(err);
     });
-}
+};
 
 chatController.deleteMessage = (req, res, next) => {
   console.log('We are in the delete message controller');
@@ -87,7 +93,7 @@ chatController.setIfNotExistSessionCookie = (req, res, next) => {
 
 chatController.authenticateSessionCookie = (req, res, next) => {
   if (!req.cookies.session_id) {
-    return next(new Error("Permission denied"));
+    return next(new Error('Permission denied'));
   }
   const text = `
     SELECT * FROM messages
@@ -99,9 +105,8 @@ chatController.authenticateSessionCookie = (req, res, next) => {
     .then((response) => {
       if (response.rows.length) {
         return next();
-      }
-      else {
-        return next(new Error("Permission denied"));
+      } else {
+        return next(new Error('Permission denied'));
       }
     })
     .catch((err) => {
