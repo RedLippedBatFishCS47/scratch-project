@@ -18,14 +18,14 @@ const MessageDisplay = () => {
   //array object
   //jsoned array object
   function fetchMessages() {
-    fetch("/api")
+    fetch("/api/messages")
       .then((res) => res.json())
       .then(setState)
       .catch((err) => console.log("Get Messages: ERROR", err));
   }
 
   function deleteMessage(el) {
-    fetch("/api/" + el.id, { method: "DELETE" })
+    fetch("/api/messages/" + el.id, { method: "DELETE" })
       .then(() => console.log("Delete Successful"))
       .then(() => setState((state) => state.filter((msg) => msg.id !== el.id)))
       .catch((err) => console.log("Delete Message: ERROR: ", err));
@@ -49,7 +49,7 @@ const MessageDisplay = () => {
   }
 
   function updateMessage(el) {
-    fetch("/api/" + el.id, {
+    fetch("/api/messages/" + el.id, {
       method: "PUT",
       body: JSON.stringify({
         content: document.getElementById(`updatedContent${el.id}`).value,
@@ -64,6 +64,7 @@ const MessageDisplay = () => {
 
   useEffect(fetchMessages, []);
   for (const el of state) {
+    console.log(el.id);
     let buttons = <td style={{border: "1px solid black"}}></td>
     let editStatus = <span  style={{display: "inline-block", padding: "0px 0px 0px 20px"}}></span>;
     if (el.edit){
