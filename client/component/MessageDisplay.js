@@ -52,28 +52,33 @@ const MessageDisplay = () => {
     fetch("/api/" + el.id, {
       method: "PUT",
       body: JSON.stringify({
-        content: document.getElementById("updatedContent").value,
+        content: document.getElementById(`updatedContent${el.id}`).value,
       }),
       headers: { "Content-Type": "application/json" },
     })
       .then(() => console.log("Put Successful"))
       .then(() => fetchMessages());
     document.getElementById(`${"modal"+el.id}`).style.display="none";
+    document.getElementById(`edit${el.id}`).innerText="Edit";
   }
 
   useEffect(fetchMessages, []);
   for (const el of state) {
+    let buttons = <td></td>
+    if(el.permission){
+      buttons = <td>
+        <EditMessageModal el={el} updateMessage={updateMessage}/>
+              <button id = {"edit"+el.id} onClick={() => editMessage(el)}>Edit</button>
+              <button id={"delete"+el.id} onClick={() => deleteMessage(el)}>Delete</button>
+      </td>
+    }
     //push message components into messages, using el as the source of props
     messages.push(
       <tr key={el.id}>
         <td>{el.time_stamp}</td>
         <td>{el.username}</td>
         <td>{el.content}</td>
-        <td>
-          <EditMessageModal el={el} updateMessage={updateMessage}/>
-          <button id = {"edit"+el.id} onClick={() => editMessage(el)}>Edit</button>
-          <button id={"delete"+el.id} onClick={() => deleteMessage(el)}>Delete</button>
-        </td>
+        {buttons}
       </tr>
     );
   }

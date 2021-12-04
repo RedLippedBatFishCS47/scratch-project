@@ -6,7 +6,7 @@ const EditMessageModal = (prop) => {
 
   return (
     <div id={"modal"+prop.el.id} style={{display: "none"}}>
-      <input type="text" id="updatedContent" defaultValue={prop.el.content}></input>
+      <input type="text" id={"updatedContent"+prop.el.id} defaultValue={prop.el.content}></input>
       <button id="saveChanges" onClick={() => prop.updateMessage(prop.el)}>
         Save
       </button>
