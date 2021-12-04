@@ -18,14 +18,14 @@ const MessageDisplay = () => {
   //array object
   //jsoned array object
   function fetchMessages() {
-    fetch("/api")
+    fetch("/api/messages")
       .then((res) => res.json())
       .then(setState)
       .catch((err) => console.log("Get Messages: ERROR", err));
   }
 
   function deleteMessage(el) {
-    fetch("/api/" + el.id, { method: "DELETE" })
+    fetch("/api/messages/" + el.id, { method: "DELETE" })
       .then(() => console.log("Delete Successful"))
       .then(() => setState((state) => state.filter((msg) => msg.id !== el.id)))
       .catch((err) => console.log("Delete Message: ERROR: ", err));
@@ -49,7 +49,7 @@ const MessageDisplay = () => {
   }
 
   function updateMessage(el) {
-    fetch("/api/" + el.id, {
+    fetch("/api/messages/" + el.id, {
       method: "PUT",
       body: JSON.stringify({
         content: document.getElementById(`updatedContent${el.id}`).value,
@@ -64,9 +64,14 @@ const MessageDisplay = () => {
 
   useEffect(fetchMessages, []);
   for (const el of state) {
-    let buttons = <td></td>
+    console.log(el.id);
+    let buttons = <td style={{border: "1px solid black"}}></td>
+    let editStatus = <span  style={{display: "inline-block", padding: "0px 0px 0px 20px"}}></span>;
+    if (el.edit){
+      editStatus = <span style={{display: "inline-block", padding: "0px 0px 0px 20px"}}>(edited)</span>
+    }
     if(el.permission){
-      buttons = <td>
+      buttons = <td style={{border: "1px solid black"}}>
         <EditMessageModal el={el} updateMessage={updateMessage}/>
               <button id = {"edit"+el.id} onClick={() => editMessage(el)}>Edit</button>
               <button id={"delete"+el.id} onClick={() => deleteMessage(el)}>Delete</button>
@@ -75,16 +80,18 @@ const MessageDisplay = () => {
     //push message components into messages, using el as the source of props
     messages.push(
       <tr key={el.id}>
-        <td>{el.time_stamp}</td>
-        <td>{el.username}</td>
-        <td>{el.content}</td>
+        <td style={{border: "1px solid black"}}>{el.time_stamp}</td>
+        <td style={{border: "1px solid black"}}>{el.username}</td>
+        <td style={{border: "1px solid black"}}>{el.content} 
+            {editStatus}
+        </td>
         {buttons}
       </tr>
     );
   }
   return (
     <div>
-      <table>
+      <table style={{border: "1px solid black"}}>
         <tbody>{messages}</tbody>
       </table>
       <br />

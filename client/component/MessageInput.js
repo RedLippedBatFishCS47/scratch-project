@@ -2,7 +2,7 @@ import React, { Component, useState, setState } from 'react';
 
 const MessageInput = (props) => {
   function send() {
-    fetch('/api', {
+    fetch('/api/messages', {
       method: 'POST',
       body: JSON.stringify({ username: document.getElementById('username').value, content: document.getElementById('content').value}),
       headers: { 'Content-Type': 'application/json' },
