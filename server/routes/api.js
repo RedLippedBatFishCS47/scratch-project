@@ -6,7 +6,6 @@ const router = new express.Router();
 // Queries DB and responds with a list of objects for all messages
 // also sets a session cookie if one does not exist
 router.get('/',
-  chatController.setIfNotExistSessionCookie,
   chatController.getMessages,
   (req, res) => {
     res.status(200).json(res.locals.messages);

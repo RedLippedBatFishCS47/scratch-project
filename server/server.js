@@ -4,6 +4,7 @@ const app = express ();
 const process = require('process');
 const path = require('path');
 const apiRouter = require('./routes/api');
+const chatController = require('./controllers/chatController');
 const PORT = 3000;
 
 app.use(express.json());
@@ -11,9 +12,13 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
-  app.get('/', (req, res) => {
-    res.sendFile(path.resolve(__dirname, '../index.html'));
-  })
+  app.get('/', 
+    chatController.setIfNotExistSessionCookie,
+    (req, res) => {
+      res.sendFile(path.resolve(__dirname, '../index.html'));
+    }
+  );
+
   app.use('/build', express.static(path.resolve(__dirname, '../build')))
 }
 
