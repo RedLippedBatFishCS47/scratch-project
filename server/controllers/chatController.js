@@ -11,7 +11,10 @@ chatController.getMessages = (req, res, next) => {
       res.locals.messages = response.row;
       next();
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      console.error(err);
+      next(err);
+    });
 };
 
 chatController.postMessages = (req, res, next) => {
@@ -26,23 +29,23 @@ chatController.postMessages = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
+      next(err);
     });
 };
 
 chatController.deleteMessage = (req, rescape, next) => {
-    console.log('We are in the delete message controller');
-    const text = `DELETE FROM messages WHERE id=$1`;
-    const values = [req.body.id];
+  console.log('We are in the delete message controller');
+  const text = `DELETE FROM messages WHERE id=$1`;
+  const values = [req.body.id];
 
-    db.query(text, values)
+  db.query(text, values)
     .then((repsonse) => {
       next();
     })
     .catch((err) => {
       console.error(err);
+      next(err);
     });
 };
-
-
 
 module.exports = chatController;
