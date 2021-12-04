@@ -1,3 +1,6 @@
 import React from 'react';
-const App = () => <div>Hello, world! I am a react app!</div>;
+import MessageDisplay from './component/MessageDisplay.js';
+
+
+const App = () => <div><MessageDisplay /></div>;
 export default App;
