@@ -1,4 +1,5 @@
 const express = require ('express');
+const cookieParser = require('cookie-parser');
 const app = express ();
 const process = require('process');
 const path = require('path');
@@ -7,6 +8,7 @@ const PORT = 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
