@@ -64,9 +64,13 @@ const MessageDisplay = () => {
 
   useEffect(fetchMessages, []);
   for (const el of state) {
-    let buttons = <td></td>
+    let buttons = <td style={{border: "1px solid black"}}></td>
+    let editStatus = <span  style={{display: "inline-block", padding: "0px 0px 0px 20px"}}></span>;
+    if (el.edit){
+      editStatus = <span style={{display: "inline-block", padding: "0px 0px 0px 20px"}}>(edited)</span>
+    }
     if(el.permission){
-      buttons = <td>
+      buttons = <td style={{border: "1px solid black"}}>
         <EditMessageModal el={el} updateMessage={updateMessage}/>
               <button id = {"edit"+el.id} onClick={() => editMessage(el)}>Edit</button>
               <button id={"delete"+el.id} onClick={() => deleteMessage(el)}>Delete</button>
@@ -75,16 +79,18 @@ const MessageDisplay = () => {
     //push message components into messages, using el as the source of props
     messages.push(
       <tr key={el.id}>
-        <td>{el.time_stamp}</td>
-        <td>{el.username}</td>
-        <td>{el.content}</td>
+        <td style={{border: "1px solid black"}}>{el.time_stamp}</td>
+        <td style={{border: "1px solid black"}}>{el.username}</td>
+        <td style={{border: "1px solid black"}}>{el.content} 
+            {editStatus}
+        </td>
         {buttons}
       </tr>
     );
   }
   return (
     <div>
-      <table>
+      <table style={{border: "1px solid black"}}>
         <tbody>{messages}</tbody>
       </table>
       <br />
