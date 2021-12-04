@@ -5,6 +5,9 @@ const path = require('path');
 const apiRouter = require('./routes/api');
 const PORT = 3000;
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
+
 if (process.env.NODE_ENV === 'production') {
   app.get('/', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../index.html'));
