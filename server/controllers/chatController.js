@@ -19,14 +19,9 @@ chatController.getMessages = (req, res, next) => {
 
 chatController.postMessages = (req, res, next) => {
   console.log('We are in the post messages controller');
-  const text = `INSERT into messages (id, username, content, time_stamp) VALUES($1, $2, $3, $4);`;
+  const text = `INSERT into messages (username, content, time_stamp) VALUES($1, $2, $3);`;
   const creation_date = new Date().toLocaleString();
-  const values = [
-    req.body.id,
-    req.body.username,
-    req.body.content,
-    creation_date,
-  ];
+  const values = [req.body.username, req.body.content, creation_date];
 
   db.query(text, values)
     .then((response) => {
