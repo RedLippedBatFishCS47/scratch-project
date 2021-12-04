@@ -12,7 +12,7 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
   },
   plugins: [
-    //new HtmlWebpackPlugin({template: 'dev.html'}),
+    new HtmlWebpackPlugin({template: 'dev.html'}),
     new MiniCssExtractPlugin(),
   ],
   devServer: {
