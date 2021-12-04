@@ -24,6 +24,8 @@ if (process.env.NODE_ENV === 'production') {
 //implement user sessions: automatically given when accessing client
 //can only delete messages whose session ID matches the client's
 
+app.use('/api', apiRouter);
+
 app.use((req, res) => {
     res.sendStatus(404);
 })
