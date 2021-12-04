@@ -14,8 +14,8 @@ router.post('/', chatController.postMessages, (req, res) => {
 });
 
 // Update a message in the DB and respond with the updated message
-router.put('/:message_id', (req, res) => {
-  res.status(501).send('Not implemented');
+router.put('/:message_id', chatController.updateMessage, (req, res) => {
+  res.status(200).json(res.locals.updatedMessage);
 });
 
 // Delete a message from the DB
