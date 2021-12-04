@@ -1,5 +1,6 @@
 const { response } = require('express');
 const db = require('../models/userModel');
+const uuid = require('uuid');
 
 const chatController = {};
 
@@ -41,6 +42,40 @@ chatController.deleteMessage = (req, res, next) => {
   db.query(text, values)
     .then((response) => {
       next();
+    })
+    .catch((err) => {
+      console.error(err);
+      next(err);
+    });
+};
+
+chatController.setIfNotExistSessionCookie = (req, res, next) => {
+  if (!req.cookies.session_id) {
+    res.cookie('session', uuid.v4() {
+      httpOnly: true,
+    });
+  }
+  next();
+};
+
+chatController.authenticateSessionCookie = (req, res, next) => {
+  if (!req.cookies.session_id) {
+    return next("Permission denied");
+  }
+  const text = `
+    SELECT * FROM messages
+    WHERE id = $1
+    AND session_id = $2
+  ;`;
+  values = [req.params.message_id, req.cookies.session_id];
+  db.query(text, values)
+    .then((response) => {
+      if (response.rows.length) {
+        return next();
+      }
+      else {
+        return next("Permission denied");
+      }
     })
     .catch((err) => {
       console.error(err);
