@@ -1,9 +1,12 @@
 DROP TABLE users;
+
 CREATE TABLE users(
-    id        SERIAL PRIMARY KEY,
-  username  VARCHAR(100) NOT NULL,
-  passcode  VARCHAR(100) NOT NULL
-)
+  username  VARCHAR(100) PRIMARY KEY,
+  passcode  VARCHAR(100) NOT NULL,
+  session_id uuid
+);
+
+INSERT INTO users (username, passcode) VALUES ('test', 'password123');
 
 
 

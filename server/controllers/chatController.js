@@ -5,10 +5,15 @@ const chatController = {};
 
 chatController.getMessages = (req, res, next) => {
   console.log('We are in the get messages controller');
-  const text = `SELECT * FROM messages ORDER BY id ASC ;`;
+  const text = `
+    SELECT * FROM messages
+    INNER JOIN users ON messages.username = users.username
+    ORDER BY messages.id ASC
+  ;`;
   db.query(text)
     .then((response) => {
       res.locals.messages = response.rows.map((entry) => {
+        console.log(entry);
         const permission = entry.session_id === req.cookies.session_id;
         const { id, content, time_stamp, username, edit } = entry;
         return {
