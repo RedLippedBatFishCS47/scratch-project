@@ -90,7 +90,7 @@ const MessageDisplay = () => {
     );
   }
   return (
-    <div>
+    <div id="MessageDisplay" style={{display:"none"}}>
       <table style={{border: "1px solid black"}}>
         <tbody>{messages}</tbody>
       </table>
