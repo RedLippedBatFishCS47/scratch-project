@@ -56,6 +56,7 @@ chatController.postMessages = (req, res, next) => {
 //update messages middleware
 chatController.updateMessage = (req, res, next) => {
   console.log('We are in the update message controller');
+  console.log(req.body);
   const text = `UPDATE messages SET content=$1, edit=$2 WHERE id=$3;`;
   const creation_date = new Date().toLocaleString();
   const values = [req.body.content, creation_date, req.params.message_id];
@@ -101,7 +102,31 @@ chatController.setSessionCookie = (req, res, next) => {
         httpOnly: true,
         secure: true,
       });
+      res.cookie('username', req.body.username);
       next();
+    })
+    .catch((err) => {
+      console.error(err);
+      next(err);
+    });
+};
+
+chatController.authorizeSession = (req, res, next) => {
+  if (!req.cookies.session_id) {
+    return next(new Error('Permission denied'));
+  }
+  const text = `
+    SELECT * FROM users
+    WHERE session_id = $1
+  ;`;
+  values = [req.cookies.session_id];
+  db.query(text, values)
+    .then((response) => {
+      if (response.rows.length) {
+        return next();
+      } else {
+        return next(new Error('Permission denied'));
+      }
     })
     .catch((err) => {
       console.error(err);
