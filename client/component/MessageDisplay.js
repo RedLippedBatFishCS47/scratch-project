@@ -1,8 +1,8 @@
 import React, { Component, useEffect, setState, useState } from "react";
 import MessageInput from "./MessageInput";
 import EditMessageModal from "./EditMessageModal";
-import UserCreator from './UserCreator';
-import UserLogin from './UserLogin';
+import UserCreator from "./UserCreator";
+import UserLogin from "./UserLogin";
 
 //need to store array of message somehow, either here or in separate file
 
@@ -16,11 +16,12 @@ const MessageDisplay = () => {
   //messages is an array of Message components
   const [state, setState] = useState([]);
   const messages = [];
+  let editMessageId = null; //if there is an Id here, the message with that Id will render with an input box
   //push messages each message object from database
   //array object
   //jsoned array object
   function fetchMessages() {
-    console.log('attempting fetch')
+    console.log("attempting fetch");
     fetch("/api/messages")
       .then((res) => res.json())
       .then(setState)
@@ -38,19 +39,11 @@ const MessageDisplay = () => {
   //if we want to have a modal invisibly generated for each element of the state
   //we need editMessage to toggle it visible
   function editMessage(el) {
-    console.log("trying to edit!");
-        //make element visible
-//"edit"+el.id
-    //if doc.get elem display = block => make it none
-    if (document.getElementById(`modal${el.id}`).style.display ==="block"){
-      document.getElementById(`modal${el.id}`).style.display="none";
-      document.getElementById(`edit${el.id}`).innerText="Edit";
-    } else {
-      document.getElementById(`modal${el.id}`).style.display="block";
-      document.getElementById(`edit${el.id}`).innerText="Cancel";
-    }
+    document.getElementById(`editMessageInput${el.id}`).style.display = "block";
+    document.getElementById(`message${el.id}`).style.display = "none";
+    document.getElementById("edit" + el.id).style.display = "none";
+    document.getElementById("saveChanges" + el.id).style.display = "block";
   }
-
   function updateMessage(el) {
     fetch("/api/messages/" + el.id, {
       method: "PUT",
@@ -61,51 +54,82 @@ const MessageDisplay = () => {
     })
       .then(() => console.log("Put Successful"))
       .then(() => fetchMessages());
-    document.getElementById(`${"modal"+el.id}`).style.display="none";
-    document.getElementById(`edit${el.id}`).innerText="Edit";
+    document.getElementById(`${"editMessageInput" + el.id}`).style.display =
+      "none";
+    document.getElementById(`message${el.id}`).style.display = "block";
+    document.getElementById("saveChanges" + el.id).style.display = "none";
+    document.getElementById("edit" + el.id).style.display = "block";
   }
 
   useEffect(fetchMessages, []);
   for (const el of state) {
     // console.log(el.id);
-    let buttons = <td style={{border: "1px solid black"}}></td>
-    let editStatus = <span  style={{display: "inline-block", padding: "0px 0px 0px 20px"}}></span>;
-    if (el.edit){
-      editStatus = <span style={{display: "inline-block", padding: "0px 0px 0px 20px"}}>(edited)</span>
+    let buttons = <td style={{ border: "1px solid black" }}></td>;
+    let editStatus = (
+      <span
+        style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}
+      ></span>
+    );
+    if (el.edit) {
+      editStatus = (
+        <span style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}>
+          (edited)
+        </span>
+      );
     }
-    if(el.permission){
-      buttons = <td style={{border: "1px solid black"}}>
-        <EditMessageModal el={el} updateMessage={updateMessage}/>
-              <button id = {"edit"+el.id} onClick={() => editMessage(el)}>Edit</button>
-              <button id={"delete"+el.id} onClick={() => deleteMessage(el)}>Delete</button>
-      </td>
+    if (el.permission) {
+      buttons = (
+        <td style={{ border: "1px solid black" }}>
+          <EditMessageModal el={el} updateMessage={updateMessage} />
+          <button
+            id={"saveChanges" + el.id}
+            onClick={() => updateMessage(el)}
+            style={{ display: "none" }}
+          >
+            Save
+          </button>
+          <button id={"edit" + el.id} onClick={() => editMessage(el)}>
+            Edit
+          </button>
+          <button id={"delete" + el.id} onClick={() => deleteMessage(el)}>
+            Delete
+          </button>
+        </td>
+      );
     }
     //push message components into messages, using el as the source of props
     messages.push(
       <tr key={el.id}>
-        <td style={{border: "1px solid black"}}>{el.time_stamp}</td>
-        <td style={{border: "1px solid black"}}>{el.username}</td>
-        <td style={{border: "1px solid black"}}>{el.content} 
-            {editStatus}
+        <td style={{ border: "1px solid black" }}>{el.time_stamp}</td>
+        <td style={{ border: "1px solid black" }}>{el.username}</td>
+        <td style={{ border: "1px solid black" }}>
+          <p id={`message${el.id}`} style={{ display: "block" }}>
+            {el.content} {editStatus}
+          </p>
+          <textarea
+            id={`editMessageInput${el.id}`}
+            style={{ display: "none" }}
+            defaultValue={el.content}
+          ></textarea>
         </td>
         {buttons}
       </tr>
     );
   }
   return (
-    <div>        
-      <UserLogin fetchMessages = {fetchMessages}/>
-      <UserCreator fetchMessages = {fetchMessages}/>
-    <div id="MessageDisplay" style={{display:"none"}}>
-      <table style={{border: "1px solid black"}}>
-        <tbody>{messages}</tbody>
-      </table>
-      <br />
-      <MessageInput
-        state={state}
-        setState={setState}
-        fetchMessages={fetchMessages}
-      />
+    <div>
+      <UserLogin fetchMessages={fetchMessages} />
+      <UserCreator fetchMessages={fetchMessages} />
+      <div id="MessageDisplay" style={{ display: "none" }}>
+        <table style={{ border: "1px solid black" }}>
+          <tbody>{messages}</tbody>
+        </table>
+        <br />
+        <MessageInput
+          state={state}
+          setState={setState}
+          fetchMessages={fetchMessages}
+        />
       </div>
     </div>
   );

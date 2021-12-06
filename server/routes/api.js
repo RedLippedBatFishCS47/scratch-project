@@ -1,5 +1,6 @@
 const express = require('express');
 const chatController = require('../controllers/chatController');
+const userController = require('../controllers/userController');
 
 const router = new express.Router();
 
@@ -35,17 +36,19 @@ router.delete('/messages/:message_id',
   }
 );
 
-router.post('/register',
-  chatController.setSessionCookie,
+router.post('/register', 
+  userController.createUser, 
+  chatController.setSessionCookie, 
   (req, res) => {
-    res.sendStatus(200);
+    res.sendStatus(200).redirect('/login');
   }
 );
 
-router.post('/login',
-  chatController.setSessionCookie,
+router.post('/login', 
+  userController.verifyUser, 
+  //chatController.authorizeSessionForMessage,
   (req, res) => {
-    res.sendStatus(200);
+    res.sendStatus(200).redirect('/');
   }
 );
 
