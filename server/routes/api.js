@@ -19,7 +19,7 @@ router.post('/messages', chatController.postMessages, (req, res) => {
 
 // Update a message in the DB and respond with the updated message
 router.put('/messages/:message_id',
-  chatController.authenticateSessionCookie,
+  chatController.authorizeSessionForMessage,
   chatController.updateMessage,
   (req, res) => {
     res.status(200).json(res.locals.updatedMessage);
@@ -28,7 +28,7 @@ router.put('/messages/:message_id',
 
 // Delete a message from the DB
 router.delete('/messages/:message_id',
-  chatController.authenticateSessionCookie,
+  chatController.authorizeSessionForMessage,
   chatController.deleteMessage,
   (req, res) => {
     res.sendStatus(200);
@@ -36,14 +36,16 @@ router.delete('/messages/:message_id',
 );
 
 router.post('/register',
+  chatController.setSessionCookie,
   (req, res) => {
-    res.sendStatus(501);
+    res.sendStatus(200);
   }
 );
 
 router.post('/login',
+  chatController.setSessionCookie,
   (req, res) => {
-    res.sendStatus(501);
+    res.sendStatus(200);
   }
 );
 
