@@ -12,8 +12,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 if (process.env.NODE_ENV === 'production') {
-  app.get('/', 
-    chatController.setIfNotExistSessionCookie,
+  app.get('/',
     (req, res) => {
       res.sendFile(path.resolve(__dirname, '../index.html'));
     }
