@@ -87,23 +87,37 @@ chatController.deleteMessage = (req, res, next) => {
     });
 };
 
-chatController.setIfNotExistSessionCookie = (req, res, next) => {
-  if (!req.cookies.session_id) {
-    res.cookie('session_id', uuid.v4(), {
-      httpOnly: true,
-      secure: true,
+chatController.setSessionCookie = (req, res, next) => {
+  const session_id = uuid.v4();
+  const text = `
+    UPDATE users
+    SET session_id=$1
+    WHERE username=$2
+  ;`;
+  const values = [session_id, req.body.username];
+
+  db.query(text, values)
+    .then((response) => {
+      res.cookie('session_id', uuid.v4(), {
+        httpOnly: true,
+        secure: true,
+      });
+      next();
+    })
+    .catch((err) => {
+      console.error(err);
+      next(err);
     });
-  }
-  next();
 };
 
-chatController.authenticateSessionCookie = (req, res, next) => {
+chatController.authorizeSessionForMessage = (req, res, next) => {
   if (!req.cookies.session_id) {
     return next(new Error('Permission denied'));
   }
   const text = `
     SELECT * FROM messages
-    WHERE id = $1
+    INNER JOIN users ON messages.username = users.username
+    WHERE messages.id = $1
     AND session_id = $2
   ;`;
   values = [req.params.message_id, req.cookies.session_id];
