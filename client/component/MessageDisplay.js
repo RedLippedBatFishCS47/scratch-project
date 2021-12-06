@@ -74,7 +74,7 @@ const MessageDisplay = () => {
   useEffect(fetchMessages, []);
   for (const el of state) {
     // console.log(el.id);
-    let buttons = <td style={{ border: "1px solid black" }}></td>;
+    let buttons = <td></td>;
     let editStatus = (
       <span
         style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}
@@ -89,8 +89,8 @@ const MessageDisplay = () => {
     }
     if (el.permission) {
       buttons = (
-        <td style={{ border: "1px solid black" }}>
-          <EditMessageModal el={el} updateMessage={updateMessage} />
+        <td className="buttonCell"  >
+          <span style={{display:"inline-block"}}>
           <button
             id={"saveChanges" + el.id}
             onClick={() => updateMessage(el)}
@@ -104,15 +104,16 @@ const MessageDisplay = () => {
           <button id={"delete" + el.id} onClick={() => deleteMessage(el)}>
             Delete
           </button>
+          </span>
         </td>
       );
     }
     //push message components into messages, using el as the source of props
     messages.push(
       <tr key={el.id}>
-        <td style={{ border: "1px solid black" }}>{formatDate(new Date(el.time_stamp))}</td>
-        <td style={{ border: "1px solid black" }}>{el.username}</td>
-        <td style={{ border: "1px solid black" }}>
+        <td>{formatDate(new Date(el.time_stamp))}</td>
+        <td>{el.username}</td>
+        <td>
           <p id={`message${el.id}`} style={{ display: "block" }}>
             {el.content} {editStatus}
           </p>
@@ -126,20 +127,30 @@ const MessageDisplay = () => {
       </tr>
     );
   }
+  let checkCookie = document.cookie; //''
+  let userLoginDivs =   <div></div>;
+
+  if (checkCookie === ''){
+    userLoginDivs = 
+    <div><UserLogin fetchMessages={fetchMessages} />
+    <UserCreator fetchMessages={fetchMessages} />
+    </div>;
+    
+  } else {
+    userLoginDivs = <MessageInput
+    state={state}
+    setState={setState}
+    fetchMessages={fetchMessages}
+  />
+  }
   return (
     <div>
-      <UserLogin fetchMessages={fetchMessages} />
-      <UserCreator fetchMessages={fetchMessages} />
-      <div id="MessageDisplay" style={{ display: "none" }}>
+      <div id="MessageDisplay" style={{ display: "block" }}>
         <table style={{ border: "1px solid black" }}>
           <tbody>{messages}</tbody>
         </table>
         <br />
-        <MessageInput
-          state={state}
-          setState={setState}
-          fetchMessages={fetchMessages}
-        />
+        {userLoginDivs}
       </div>
     </div>
   );

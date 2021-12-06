@@ -37,13 +37,13 @@ const UserCreator = (props) => {
         className="textInput"
         id="createUsername"
         placeholder="Enter username"
-      ></input>
+      ></input><br/>
       <input
         className="textInput"
         id="createPassword"
         type="password"
         placeholder="Enter password"
-      ></input>
+      ></input><br/>
       <button className="submitButton" onClick={send}>
         Register
       </button>
