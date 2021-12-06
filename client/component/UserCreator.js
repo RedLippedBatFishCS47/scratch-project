@@ -36,6 +36,7 @@ const UserCreator = (props) => {
       <input
         className="textInput"
         id="createPassword"
+        type="password"
         placeholder="Enter password"
       ></input>
       <button className="submitButton" onClick={send}>

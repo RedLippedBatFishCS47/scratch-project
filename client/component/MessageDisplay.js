@@ -3,6 +3,7 @@ import MessageInput from "./MessageInput";
 import EditMessageModal from "./EditMessageModal";
 import UserCreator from "./UserCreator";
 import UserLogin from "./UserLogin";
+import dateFormat from "dateformat";
 
 //need to store array of message somehow, either here or in separate file
 
@@ -12,6 +13,15 @@ import UserLogin from "./UserLogin";
 
 //fetch in the app?
 //assume we get the array of messages as a prop
+
+function formatDate(d) {
+  //const datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +
+  //      d.getHours() + ":" + d.getMinutes();
+  const pstDate = new Date(Number(d) + 8 * 60 * 60 * 1000);
+  return dateFormat(pstDate, "yyyy/mm/d h:MM TT");
+}
+
+
 const MessageDisplay = () => {
   //messages is an array of Message components
   const [state, setState] = useState([]);
@@ -48,7 +58,7 @@ const MessageDisplay = () => {
     fetch("/api/messages/" + el.id, {
       method: "PUT",
       body: JSON.stringify({
-        content: document.getElementById(`updatedContent${el.id}`).value,
+        content: document.getElementById(`editMessageInput${el.id}`).value,
       }),
       headers: { "Content-Type": "application/json" },
     })
@@ -100,7 +110,7 @@ const MessageDisplay = () => {
     //push message components into messages, using el as the source of props
     messages.push(
       <tr key={el.id}>
-        <td style={{ border: "1px solid black" }}>{el.time_stamp}</td>
+        <td style={{ border: "1px solid black" }}>{formatDate(new Date(el.time_stamp))}</td>
         <td style={{ border: "1px solid black" }}>{el.username}</td>
         <td style={{ border: "1px solid black" }}>
           <p id={`message${el.id}`} style={{ display: "block" }}>
