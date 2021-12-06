@@ -90,13 +90,13 @@ chatController.deleteMessage = (req, res, next) => {
 chatController.setSessionCookie = (req, res, next) => {
   const session_id = uuid.v4();
   const text = `
-    UPDATE users messages
+    UPDATE users
     SET session_id=$1
     WHERE username=$2
   ;`;
   const values = [session_id, req.body.username];
 
-  db.query(teext, values)
+  db.query(text, values)
     .then((response) => {
       res.cookie('session_id', uuid.v4(), {
         httpOnly: true,
@@ -110,7 +110,7 @@ chatController.setSessionCookie = (req, res, next) => {
     });
 };
 
-chatController.authenticateSessionCookie = (req, res, next) => {
+chatController.authorizeSessionForMessage = (req, res, next) => {
   if (!req.cookies.session_id) {
     return next(new Error('Permission denied'));
   }

@@ -19,10 +19,10 @@ module.exports = {
   ],
   devServer: {
     proxy: {'/api': 'http://localhost:3000'},
-    onBeforeSetupMiddleware: (devServer) => {
-      devServer.app.use(cookieParser());
-      devServer.app.get('/', chatController.setIfNotExistSessionCookie);
-    },
+//    onBeforeSetupMiddleware: (devServer) => {
+//      devServer.app.use(cookieParser());
+//      devServer.app.get('/', chatController.setIfNotExistSessionCookie);
+//    },
   },
   module: {
     rules: [
