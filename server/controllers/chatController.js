@@ -14,7 +14,7 @@ chatController.getMessages = (req, res, next) => {
     .then((response) => {
       res.locals.messages = response.rows.map((entry) => {
         console.log(entry);
-        const permission = entry.session_id === req.cookies.session_id;
+        const permission = true; //entry.session_id === req.cookies.session_id;
         const { id, content, time_stamp, username, edit } = entry;
         return {
           id,
