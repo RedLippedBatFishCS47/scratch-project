@@ -13,7 +13,6 @@ const UserCreator = () => {
       //what happens if dupe username?
 
       //otherwise, if we create the user...then what?
-      props.fetchMessages();
       document.getElementById("UserCreator").style.display = "none";
       document.getElementById("MessageDisplay").style.display = "block";
     });
