@@ -5,4 +5,5 @@ CREATE TABLE messages(
   content  VARCHAR(100) NULL,
   time_stamp timestamptz
 );
+INSERT INTO messages (username, content) VALUES ('test', 'hello world');
 
