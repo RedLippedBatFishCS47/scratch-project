@@ -11,13 +11,18 @@ const UserLogin = (props) => {
         password: document.getElementById("loginPassword").value,
       }),
       headers: { "Content-Type": "application/json" },
-    }).then(() => {
-      console.log('login completed')
-      //what happens if dupe username?
-      //otherwise, if we login the user...then what?
-      props.fetchMessages();
-      document.getElementById("UserLogin").style.display = "none";
-      document.getElementById("MessageDisplay").style.display = "block";
+    }).then((response) => {
+      if (response.status===200){
+        console.log(response)
+        //what happens if dupe username?
+        //otherwise, if we login the user...then what?
+        props.fetchMessages();
+        document.getElementById("UserLogin").style.display = "none";
+        document.getElementById("MessageDisplay").style.display = "block";
+      } else {
+        console.log('login failed');
+        document.getElementById("loginfailed").style.display="block";
+      }
     });
   }
 
@@ -45,6 +50,7 @@ function redirectToSignUp(){
       <button className="submitButton" onClick={redirectToSignUp}>
         Create an account
       </button>
+      <p id="loginfailed" style={{display: "none"}}>Username/password does not exist</p>
     </div>
   );
 };

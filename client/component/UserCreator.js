@@ -11,13 +11,18 @@ const UserCreator = (props) => {
         password: document.getElementById("createPassword").value,
       }),
       headers: { "Content-Type": "application/json" },
-    }).then(() => {
-      console.log('registration completed')
-      //what happens if dupe username?
-      //otherwise, if we create the user...then what?
-      props.fetchMessages();
-      document.getElementById("UserCreator").style.display = "none";
-      document.getElementById("MessageDisplay").style.display = "block";
+    }).then((response) => {
+      if(response.status===200){
+        console.log(response)
+        console.log('registration completed')
+        //what happens if dupe username?
+        //otherwise, if we create the user...then what?
+        props.fetchMessages();
+        document.getElementById("UserCreator").style.display = "none";
+        document.getElementById("MessageDisplay").style.display = "block";
+      } else{
+        document.getElementById("registerfailed").style.display = "block";
+      }
     });
   }
   function redirectLogin(){
@@ -45,6 +50,7 @@ const UserCreator = (props) => {
       <button className="submitButton" onClick={redirectLogin}>
         Log-in Instead
       </button>
+      <p id="registerfailed" style={{display: "none"}}>Someone cool with that username already exists, pick a different name!</p>
     </div>
   );
 };
