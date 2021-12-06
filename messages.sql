@@ -6,4 +6,5 @@ CREATE TABLE messages(
   time_stamp timestamptz,
   edit timestamptz
 );
+INSERT INTO messages (username, content) VALUES ('test', 'hello world');
 
