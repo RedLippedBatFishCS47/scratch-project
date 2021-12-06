@@ -2,14 +2,17 @@ import React, { Component, useState, setState } from "react";
 
 const UserLogin = (props) => {
   function send() {
+    console.log(document.getElementById("createUsername").value)
+    console.log(document.getElementById("createPassword").value)
     fetch("/api/login", {
       method: "POST",
       body: JSON.stringify({
         username: document.getElementById("createUsername").value,
-        content: document.getElementById("createPassword").value,
+        password: document.getElementById("createPassword").value,
       }),
       headers: { "Content-Type": "application/json" },
     }).then(() => {
+      console.log('login completed')
       //what happens if dupe username?
       //otherwise, if we create the user...then what?
       props.fetchMessages();

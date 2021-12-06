@@ -67,7 +67,7 @@ const MessageDisplay = () => {
 
   useEffect(fetchMessages, []);
   for (const el of state) {
-    console.log(el.id);
+    // console.log(el.id);
     let buttons = <td style={{border: "1px solid black"}}></td>
     let editStatus = <span  style={{display: "inline-block", padding: "0px 0px 0px 20px"}}></span>;
     if (el.edit){
