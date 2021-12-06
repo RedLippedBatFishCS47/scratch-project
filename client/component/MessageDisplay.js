@@ -1,6 +1,8 @@
 import React, { Component, useEffect, setState, useState } from "react";
 import MessageInput from "./MessageInput";
 import EditMessageModal from "./EditMessageModal";
+import UserCreator from './UserCreator';
+import UserLogin from './UserLogin';
 
 //need to store array of message somehow, either here or in separate file
 
@@ -18,6 +20,7 @@ const MessageDisplay = () => {
   //array object
   //jsoned array object
   function fetchMessages() {
+    console.log('attempting fetch')
     fetch("/api/messages")
       .then((res) => res.json())
       .then(setState)
@@ -64,7 +67,7 @@ const MessageDisplay = () => {
 
   useEffect(fetchMessages, []);
   for (const el of state) {
-    console.log(el.id);
+    // console.log(el.id);
     let buttons = <td style={{border: "1px solid black"}}></td>
     let editStatus = <span  style={{display: "inline-block", padding: "0px 0px 0px 20px"}}></span>;
     if (el.edit){
@@ -90,6 +93,9 @@ const MessageDisplay = () => {
     );
   }
   return (
+    <div>        
+      <UserLogin fetchMessages = {fetchMessages}/>
+      <UserCreator fetchMessages = {fetchMessages}/>
     <div id="MessageDisplay" style={{display:"none"}}>
       <table style={{border: "1px solid black"}}>
         <tbody>{messages}</tbody>
@@ -100,6 +106,7 @@ const MessageDisplay = () => {
         setState={setState}
         fetchMessages={fetchMessages}
       />
+      </div>
     </div>
   );
 };
