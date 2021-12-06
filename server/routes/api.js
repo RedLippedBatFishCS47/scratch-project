@@ -36,17 +36,17 @@ router.delete('/messages/:message_id',
   }
 );
 
-router.post('/register', 
-  userController.createUser, 
-  chatController.setSessionCookie, 
+router.post('/register',
+  userController.createUser,
+  chatController.setSessionCookie,
   (req, res) => {
     res.sendStatus(200).redirect('/login');
   }
 );
 
-router.post('/login', 
-  userController.verifyUser, 
-  //chatController.authorizeSessionForMessage,
+router.post('/login',
+  userController.verifyUser,
+  chatController.setSessionCookie,
   (req, res) => {
     res.sendStatus(200).redirect('/');
   }

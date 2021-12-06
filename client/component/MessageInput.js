@@ -15,7 +15,7 @@ const MessageInput = (props) => {
   return(
     <div>
         <input className="textInput" id="username" placeholder="Enter username"></input>
-        <input className="textInput" id="content" placeholder="Type message here"></input>
+        <textarea className="textInput" id="content" placeholder="Type message here"></textarea>
         <button className = "submitButton" onClick={send}>Send</button>
     </div>
   )

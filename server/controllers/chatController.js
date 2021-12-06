@@ -56,6 +56,7 @@ chatController.postMessages = (req, res, next) => {
 //update messages middleware
 chatController.updateMessage = (req, res, next) => {
   console.log('We are in the update message controller');
+  console.log(req.body);
   const text = `UPDATE messages SET content=$1, edit=$2 WHERE id=$3;`;
   const creation_date = new Date().toLocaleString();
   const values = [req.body.content, creation_date, req.params.message_id];
