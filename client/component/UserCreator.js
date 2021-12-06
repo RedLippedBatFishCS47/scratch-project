@@ -1,6 +1,6 @@
 import React, { Component, useState, setState } from "react";
 
-const UserCreator = () => {
+const UserCreator = (props) => {
   function send() {
     fetch("/api/register", {
       method: "POST",
@@ -11,8 +11,8 @@ const UserCreator = () => {
       headers: { "Content-Type": "application/json" },
     }).then(() => {
       //what happens if dupe username?
-
       //otherwise, if we create the user...then what?
+      props.fetchMessages();
       document.getElementById("UserCreator").style.display = "none";
       document.getElementById("MessageDisplay").style.display = "block";
     });

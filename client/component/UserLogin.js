@@ -1,8 +1,8 @@
 import React, { Component, useState, setState } from "react";
 
-const UserLogin = () => {
+const UserLogin = (props) => {
   function send() {
-    fetch("/api/register", {
+    fetch("/api/login", {
       method: "POST",
       body: JSON.stringify({
         username: document.getElementById("createUsername").value,
@@ -11,8 +11,8 @@ const UserLogin = () => {
       headers: { "Content-Type": "application/json" },
     }).then(() => {
       //what happens if dupe username?
-
       //otherwise, if we create the user...then what?
+      props.fetchMessages();
       document.getElementById("UserLogin").style.display = "none";
       document.getElementById("MessageDisplay").style.display = "block";
     });
