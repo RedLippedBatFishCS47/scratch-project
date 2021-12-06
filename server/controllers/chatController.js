@@ -13,8 +13,8 @@ chatController.getMessages = (req, res, next) => {
   db.query(text)
     .then((response) => {
       res.locals.messages = response.rows.map((entry) => {
-        console.log(entry);
-        const permission = true; //entry.session_id === req.cookies.session_id;
+        console.log(entry.session_id, req.cookies.session_id)
+        const permission = entry.session_id === req.cookies.session_id;
         const { id, content, time_stamp, username, edit } = entry;
         return {
           id,
@@ -35,13 +35,12 @@ chatController.getMessages = (req, res, next) => {
 
 chatController.postMessages = (req, res, next) => {
   console.log('We are in the post messages controller');
-  const text = `INSERT into messages (username, content, time_stamp, session_id) VALUES($1, $2, $3, $4);`;
+  const text = `INSERT into messages (username, content, time_stamp) VALUES($1, $2, $3);`;
   const creation_date = new Date().toLocaleString();
   const values = [
     req.body.username,
     req.body.content,
     creation_date,
-    req.cookies.session_id,
   ];
 
   db.query(text, values)
@@ -98,7 +97,7 @@ chatController.setSessionCookie = (req, res, next) => {
 
   db.query(text, values)
     .then((response) => {
-      res.cookie('session_id', uuid.v4(), {
+      res.cookie('session_id', session_id, {
         httpOnly: true,
         secure: true,
       });
@@ -118,7 +117,7 @@ chatController.authorizeSessionForMessage = (req, res, next) => {
     SELECT * FROM messages
     INNER JOIN users ON messages.username = users.username
     WHERE messages.id = $1
-    AND session_id = $2
+    AND users.session_id = $2
   ;`;
   values = [req.params.message_id, req.cookies.session_id];
   db.query(text, values)
