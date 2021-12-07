@@ -1,4 +1,6 @@
 import React, { Component, useState, setState } from 'react';
+import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
 
 const MessageInput = (props) => {
   function send() {
@@ -14,11 +16,9 @@ const MessageInput = (props) => {
     })
   }
   return(
-    <div>
+    <div className="inputFields">
               <textarea className="textInput" id="content" placeholder="Type message here"></textarea>
-              <p></p>
-        {/* <input className="textInput" id="username" placeholder="Enter username"></input> */}
-        <button className = "submitButton" onClick={send}>Send</button>
+        <button id="submitButton" className = "submitButton" onClick={send}>Send</button>
 
     </div>
   )

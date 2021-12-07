@@ -44,13 +44,15 @@ const UserCreator = (props) => {
         type="password"
         placeholder="Enter password"
       ></input><br/>
+      <div id="loginButtons">
       <button className="submitButton" onClick={send}>
         Register
       </button>
       <button className="submitButton" onClick={redirectLogin}>
         Log-in Instead
       </button>
-      <p id="registerfailed" style={{display: "none"}}>Someone cool with that username already exists, pick a different name!</p>
+      </div>
+      <p align="center" id="registerfailed" style={{display: "none"}}>Someone cool with that username already exists, pick a different name!</p>
     </div>
   );
 };

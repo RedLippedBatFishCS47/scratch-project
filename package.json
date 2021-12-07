@@ -21,6 +21,9 @@
   },
   "homepage": "https://github.com/RedLippedBatFishCS47/scratch-project#readme",
   "dependencies": {
+    "@emotion/react": "^11.7.0",
+    "@emotion/styled": "^11.6.0",
+    "@mui/material": "^5.2.3",
     "bcrypt": "^5.0.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.6",
