@@ -3,6 +3,8 @@ const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const chatController = require('./server/controllers/chatController');
+const cookieParser = require('cookie-parser');
 
 module.exports = {
   mode: process.env.NODE_ENV || 'production',
@@ -12,11 +14,15 @@ module.exports = {
     path: path.resolve(__dirname, 'build'),
   },
   plugins: [
-    //new HtmlWebpackPlugin({template: 'dev.html'}),
+    new HtmlWebpackPlugin({template: 'dev.html'}),
     new MiniCssExtractPlugin(),
   ],
   devServer: {
     proxy: {'/api': 'http://localhost:3000'},
+//    onBeforeSetupMiddleware: (devServer) => {
+//      devServer.app.use(cookieParser());
+//      devServer.app.get('/', chatController.setIfNotExistSessionCookie);
+//    },
   },
   module: {
     rules: [
