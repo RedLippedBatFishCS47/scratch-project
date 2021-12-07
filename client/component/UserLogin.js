@@ -37,13 +37,13 @@ function redirectToSignUp(){
         className="textInput"
         id="loginUsername"
         placeholder="Enter username"
-      ></input>
+      ></input><br/>
       <input
         className="textInput"
         id="loginPassword"
         type="password"
         placeholder="Enter password"
-      ></input>
+      ></input><br/>
       <button className="submitButton" onClick={send}>
         Login
       </button>
