@@ -44,13 +44,15 @@ function redirectToSignUp(){
         type="password"
         placeholder="Enter password"
       ></input><br/>
-      <button className="submitButton" onClick={send}>
+      <div id="loginButtons">
+      <button id="loginButton" className="submitButton" onClick={send}>
         Login
       </button>
-      <button className="submitButton" onClick={redirectToSignUp}>
+      <button id="createAccount" className="submitButton" onClick={redirectToSignUp}>
         Create an account
       </button>
-      <p id="loginfailed" style={{display: "none"}}>Username/password does not exist</p>
+      </div>
+      <p align="center" id="loginfailed" style={{display: "none"}}>Username/password does not exist</p>
     </div>
   );
 };

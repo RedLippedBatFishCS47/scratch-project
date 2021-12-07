@@ -4,6 +4,7 @@ import EditMessageModal from "./EditMessageModal";
 import UserCreator from "./UserCreator";
 import UserLogin from "./UserLogin";
 import dateFormat from "dateformat";
+import Button from "@mui/material/Button";
 
 //need to store array of message somehow, either here or in separate file
 
@@ -20,7 +21,6 @@ function formatDate(d) {
   const pstDate = new Date(Number(d) + 8 * 60 * 60 * 1000);
   return dateFormat(pstDate, "yyyy/mm/d h:MM TT");
 }
-
 
 const MessageDisplay = () => {
   //messages is an array of Message components
@@ -72,9 +72,21 @@ const MessageDisplay = () => {
   }
 
   useEffect(fetchMessages, []);
+
+  messages.push(
+    <tr>
+      <th>Date</th>
+      <th>Name</th>
+      <th>Message</th>
+      <th>Actions</th>
+    </tr>
+  );
+
   for (const el of state) {
     // console.log(el.id);
     let buttons = <td></td>;
+    let editButton = <td></td>;
+    let deleteButton = <td></td>;
     let editStatus = (
       <span
         style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}
@@ -82,38 +94,52 @@ const MessageDisplay = () => {
     );
     if (el.edit) {
       editStatus = (
-        <span style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}>
+        <span id="editedFlag" style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}>
           (edited)
         </span>
       );
     }
     if (el.permission) {
-      buttons = (
-        <td className="buttonCell"  >
-          <span style={{display:"inline-block"}}>
+      deleteButton = (
+        <td className="actionButtons">
           <button
             id={"saveChanges" + el.id}
+            className="saveBtn"
             onClick={() => updateMessage(el)}
             style={{ display: "none" }}
           >
             Save
           </button>
-          <button id={"edit" + el.id} onClick={() => editMessage(el)}>
-            Edit
+          <button
+            id={"edit" + el.id}
+            className="editBtn"
+            onClick={() => editMessage(el)}
+          >
+            {/* <img src="./Images/editPencil.png" width="90" height="90" alt="Edit" /> */}
+            ✏️
           </button>
-          <button id={"delete" + el.id} onClick={() => deleteMessage(el)}>
-            Delete
+          <button
+            id={"delete" + el.id}
+            className="deleteBtn"
+            onClick={() => deleteMessage(el)}
+          >
+            ⌫
           </button>
-          </span>
         </td>
       );
     }
+    //cut off long usernames
+    let currUsername = el.username;
+    if (currUsername.length > 10) {
+      currUsername.slice(0, 10);
+    }
+
     //push message components into messages, using el as the source of props
     messages.push(
       <tr key={el.id}>
-        <td>{formatDate(new Date(el.time_stamp))}</td>
-        <td>{el.username}</td>
-        <td>
+        <td className="timestamp">{formatDate(new Date(el.time_stamp))}</td>
+        <td className="usernameMessage">{currUsername}</td>
+        <td className="messageContents">
           <p id={`message${el.id}`} style={{ display: "block" }}>
             {el.content} {editStatus}
           </p>
@@ -123,37 +149,41 @@ const MessageDisplay = () => {
             defaultValue={el.content}
           ></textarea>
         </td>
-        {buttons}
+        {/* <td className="actionButtons">{deleteButton}</td> */}
+        {deleteButton}
       </tr>
     );
   }
   let checkCookie = document.cookie; //''
-  let userLoginDivs =   <div></div>;
+  let userLoginDivs = <div></div>;
 
-  if (checkCookie === ''){
-    userLoginDivs = 
-    <div><UserLogin fetchMessages={fetchMessages} />
-    <UserCreator fetchMessages={fetchMessages} />
-    </div>;
-    
-  } else {
-    userLoginDivs = <MessageInput
-    state={state}
-    setState={setState}
-    fetchMessages={fetchMessages}
-  />
-  }
-  return (
-    <div>
-      <div id="MessageDisplay" style={{ display: "block" }}>
-        <table style={{ border: "1px solid black" }}>
-          <tbody>{messages}</tbody>
-        </table>
-        <br />
-        {userLoginDivs}
+  if (checkCookie === "") {
+    userLoginDivs = (
+      <div>
+        <UserLogin fetchMessages={fetchMessages} />
+        <UserCreator fetchMessages={fetchMessages} />
       </div>
-    </div>
-  );
+    );
+  } else {
+    userLoginDivs = (
+      <div>
+        <div id="MessageContent">
+          <div id="MessageDisplay">
+            <table>
+              <tbody>{messages}</tbody>
+            </table>
+            <br />
+          </div>
+        </div>
+        <MessageInput
+          state={state}
+          setState={setState}
+          fetchMessages={fetchMessages}
+        />
+      </div>
+    );
+  }
+  return <div>{userLoginDivs}</div>;
 };
 
 export default MessageDisplay;
