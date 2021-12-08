@@ -1,4 +1,4 @@
-import React, { Component, useState, setState } from "react";
+import React from "react";
 
 const UserLogin = (props) => {
   function send() {
@@ -32,7 +32,7 @@ function redirectToSignUp(){
 }
   return (
     <div id="UserLogin" style={{ display: "block" }}>
-      <h2>Login (COOOL people ONLY!)</h2>
+      <h2>Login</h2>
       <input
         className="textInput"
         id="loginUsername"
