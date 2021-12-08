@@ -32,10 +32,15 @@ const MessageDisplay = () => {
     console.log("attempting fetch");
     fetch("/api/messages")
       .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
       .then(setState)
       .catch((err) => console.log("Get Messages: ERROR", err));
   }
 
+  // send delte message to back end, front end deletes message w/o need for response
   function deleteMessage(el) {
     fetch("/api/messages/" + el.id, { method: "DELETE" })
       .then(() => console.log("Delete Successful"))
@@ -84,7 +89,7 @@ const MessageDisplay = () => {
     // console.log(el.id);
     let buttons = <td></td>;
     let editButton = <td></td>;
-    let deleteButton = <td></td>;
+    let actionButtons = <td></td>;
     let editStatus = (
       <span
         style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}
@@ -98,7 +103,7 @@ const MessageDisplay = () => {
       );
     }
     if (el.permission) {
-      deleteButton = (
+      actionButtons = (
         <td className="actionButtons">
           <button
             id={"saveChanges" + el.id}
@@ -147,23 +152,23 @@ const MessageDisplay = () => {
             defaultValue={el.content}
           ></textarea>
         </td>
-        {/* <td className="actionButtons">{deleteButton}</td> */}
-        {deleteButton}
+        {actionButtons}
       </tr>
     );
   }
-  let checkCookie = document.cookie; //''
-  let userLoginDivs = <div></div>;
+  let checkCookie = document.cookie; // ''
+  let pageContent = <div></div>;
 
+  // IF COOKIE IS EMPTY, RENDER LOGIN/SIGN UP. OTHERWISE, RENDER MESSAGES
   if (checkCookie === "") {
-    userLoginDivs = (
+    pageContent = (
       <div>
         <UserLogin fetchMessages={fetchMessages} />
         <UserCreator fetchMessages={fetchMessages} />
       </div>
     );
   } else {
-    userLoginDivs = (
+    pageContent = (
       <div>
         <div id="MessageContent">
           <div id="MessageDisplay">
@@ -181,7 +186,7 @@ const MessageDisplay = () => {
       </div>
     );
   }
-  return <div>{userLoginDivs}</div>;
+  return <div>{pageContent}</div>;
 };
 
 export default MessageDisplay;
