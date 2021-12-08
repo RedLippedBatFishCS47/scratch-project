@@ -1,10 +1,10 @@
-const db = require('../models/userModel');
-const uuid = require('uuid');
+const db = require("../models/userModel");
+const uuid = require("uuid");
 
 const chatController = {};
 
 chatController.getMessages = (req, res, next) => {
-  console.log('We are in the get messages controller');
+  console.log("We are in the get messages controller");
   const text = `
     SELECT * FROM messages
     INNER JOIN users ON messages.username = users.username
@@ -13,7 +13,7 @@ chatController.getMessages = (req, res, next) => {
   db.query(text)
     .then((response) => {
       res.locals.messages = response.rows.map((entry) => {
-        console.log(entry.session_id, req.cookies.session_id)
+        console.log(entry.session_id, req.cookies.session_id);
         const permission = entry.session_id === req.cookies.session_id;
         const { id, content, time_stamp, username, edit } = entry;
         return {
@@ -34,14 +34,10 @@ chatController.getMessages = (req, res, next) => {
 };
 
 chatController.postMessages = (req, res, next) => {
-  console.log('We are in the post messages controller');
+  console.log("We are in the post messages controller");
   const text = `INSERT into messages (username, content, time_stamp) VALUES($1, $2, $3);`;
   const creation_date = new Date().toLocaleString();
-  const values = [
-    req.body.username,
-    req.body.content,
-    creation_date,
-  ];
+  const values = [req.body.username, req.body.content, creation_date];
 
   db.query(text, values)
     .then((response) => {
@@ -55,7 +51,7 @@ chatController.postMessages = (req, res, next) => {
 
 //update messages middleware
 chatController.updateMessage = (req, res, next) => {
-  console.log('We are in the update message controller');
+  console.log("We are in the update message controller");
   console.log(req.body);
   const text = `UPDATE messages SET content=$1, edit=$2 WHERE id=$3;`;
   const creation_date = new Date().toLocaleString();
@@ -63,7 +59,8 @@ chatController.updateMessage = (req, res, next) => {
 
   db.query(text, values)
     .then((response) => {
-      res.locals.updatedMessage = response.rows;
+      // console.log("this is response rows", response.rows);
+      // res.locals.updatedMessage = response.rows;
       next();
     })
     .catch((err) => {
@@ -73,7 +70,7 @@ chatController.updateMessage = (req, res, next) => {
 };
 
 chatController.deleteMessage = (req, res, next) => {
-  console.log('We are in the delete message controller');
+  console.log("We are in the delete message controller");
   const text = `DELETE FROM messages WHERE id=$1;`;
   const values = [req.params.message_id];
 
@@ -98,11 +95,11 @@ chatController.setSessionCookie = (req, res, next) => {
 
   db.query(text, values)
     .then((response) => {
-      res.cookie('session_id', session_id, {
+      res.cookie("session_id", session_id, {
         httpOnly: true,
         secure: true,
       });
-      res.cookie('username', req.body.username);
+      res.cookie("username", req.body.username);
       next();
     })
     .catch((err) => {
@@ -113,7 +110,7 @@ chatController.setSessionCookie = (req, res, next) => {
 
 chatController.authorizeSession = (req, res, next) => {
   if (!req.cookies.session_id) {
-    return next(new Error('Permission denied'));
+    return next(new Error("Permission denied"));
   }
   const text = `
     SELECT * FROM users
@@ -125,7 +122,7 @@ chatController.authorizeSession = (req, res, next) => {
       if (response.rows.length) {
         return next();
       } else {
-        return next(new Error('Permission denied'));
+        return next(new Error("Permission denied"));
       }
     })
     .catch((err) => {
@@ -136,7 +133,7 @@ chatController.authorizeSession = (req, res, next) => {
 
 chatController.authorizeSessionForMessage = (req, res, next) => {
   if (!req.cookies.session_id) {
-    return next(new Error('Permission denied'));
+    return next(new Error("Permission denied"));
   }
   const text = `
     SELECT * FROM messages
@@ -150,7 +147,7 @@ chatController.authorizeSessionForMessage = (req, res, next) => {
       if (response.rows.length) {
         return next();
       } else {
-        return next(new Error('Permission denied'));
+        return next(new Error("Permission denied"));
       }
     })
     .catch((err) => {
