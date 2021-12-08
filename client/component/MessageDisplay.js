@@ -1,10 +1,8 @@
 import React, { Component, useEffect, setState, useState } from "react";
 import MessageInput from "./MessageInput";
-import EditMessageModal from "./EditMessageModal";
 import UserCreator from "./UserCreator";
 import UserLogin from "./UserLogin";
 import dateFormat from "dateformat";
-import Button from "@mui/material/Button";
 
 //need to store array of message somehow, either here or in separate file
 
@@ -62,7 +60,7 @@ const MessageDisplay = () => {
       }),
       headers: { "Content-Type": "application/json" },
     })
-      .then(() => console.log("Put Successful"))
+      .then(() => console.log('Put successful'))
       .then(() => fetchMessages());
     document.getElementById(`${"editMessageInput" + el.id}`).style.display =
       "none";
