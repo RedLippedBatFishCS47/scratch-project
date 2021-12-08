@@ -9,8 +9,8 @@ userController.createUser = (req, res, next) => {
     console.log("Username: ", req.body.username);
     console.log("Password: ", req.body.password);
     if (!req.body.username || !req.body.password) return next(new Error('Please create an account with correct username and password'));
-    const text = `INSERT INTO users(username, passcode, session_id) VALUES($1, $2, $3);`;
-    const values = [req.body.username, hash, req.cookies.session_id];
+    const text = `INSERT INTO users(username, passcode) VALUES($1, $2);`;
+    const values = [req.body.username, hash];
     db.query(text, values)
         .then((response) => {
             return next();
