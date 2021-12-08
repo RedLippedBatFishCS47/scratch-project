@@ -45,7 +45,7 @@ router.post(
   userController.createUser,
   chatController.setSessionCookie,
   (req, res) => {
-    res.sendStatus(200).redirect("/login");
+    res.status(200).redirect("/login");
   }
 );
 
@@ -54,7 +54,7 @@ router.post(
   userController.verifyUser,
   chatController.setSessionCookie,
   (req, res) => {
-    res.sendStatus(200).redirect("/");
+    res.status(200).redirect("/");
   }
 );
 
