@@ -1,4 +1,4 @@
-import React, { Component, useState, setState } from "react";
+import React from "react";
 
 const UserCreator = (props) => {
   function send() {
@@ -19,7 +19,7 @@ const UserCreator = (props) => {
         //otherwise, if we create the user...then what?
         props.fetchMessages();
         document.getElementById("UserCreator").style.display = "none";
-        document.getElementById("MessageDisplay").style.display = "block";
+        // document.getElementById("MessageDisplay").style.display = "block";
       } else{
         document.getElementById("registerfailed").style.display = "block";
       }
@@ -32,7 +32,7 @@ const UserCreator = (props) => {
   return (
     <div id="UserCreator" style={{ display: "none" }}>
 
-      <h2>Register ONLY if you are a COOOOL person!</h2>
+      <h2>Register please, teens</h2>
       <input
         className="textInput"
         id="createUsername"
@@ -45,14 +45,14 @@ const UserCreator = (props) => {
         placeholder="Enter password"
       ></input><br/>
       <div id="loginButtons">
-      <button className="submitButton" onClick={send}>
-        Register
-      </button>
-      <button className="submitButton" onClick={redirectLogin}>
-        Log-in Instead
-      </button>
+        <button className="submitButton" onClick={redirectLogin}>
+          Log-in Instead
+        </button>
+        <button className="submitButton" onClick={send}>
+          Register
+        </button>
       </div>
-      <p align="center" id="registerfailed" style={{display: "none"}}>Someone cool with that username already exists, pick a different name!</p>
+      <p align="center" id="registerfailed" style={{display: "none"}}>Username already exists, pick a different name!</p>
     </div>
   );
 };
