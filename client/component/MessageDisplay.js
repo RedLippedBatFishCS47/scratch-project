@@ -33,6 +33,10 @@ const MessageDisplay = () => {
     console.log("attempting fetch");
     fetch("/api/messages")
       .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
       .then(setState)
       .catch((err) => console.log("Get Messages: ERROR", err));
   }
@@ -153,7 +157,7 @@ const MessageDisplay = () => {
       </tr>
     );
   }
-  let checkCookie = document.cookie; //''
+  let checkCookie = document.cookie; // ''
   let pageContent = <div></div>;
 
   // IF COOKIE IS EMPTY, RENDER LOGIN/SIGN UP. OTHERWISE, RENDER MESSAGES

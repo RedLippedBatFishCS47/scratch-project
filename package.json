@@ -7,7 +7,7 @@
     "start": "cross-env NODE_ENV=production node server/server.js",
     "build": "cross-env NODE_ENV=production webpack",
     "dev": "concurrently \"cross-env NODE_ENV=development webpack serve\" \"cross-env NODE_ENV=development node server/server.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -20,6 +20,13 @@
     "url": "https://github.com/RedLippedBatFishCS47/scratch-project/issues"
   },
   "homepage": "https://github.com/RedLippedBatFishCS47/scratch-project#readme",
+  "jest": {
+    "verbose": true,
+    "transform": {
+      "^.+\\.(js|jsx)$": "babel-jest"
+    },
+    "testEnvironment": "jsdom"
+  },
   "dependencies": {
     "@emotion/react": "^11.7.0",
     "@emotion/styled": "^11.6.0",
@@ -39,19 +46,27 @@
     "@babel/core": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "@babel/preset-react": "^7.16.0",
+    "@testing-library/jest-dom": "^5.16.1",
+    "@testing-library/react": "^12.1.2",
+    "babel-jest": "^27.4.2",
     "babel-loader": "^8.2.3",
     "concurrently": "^6.4.0",
     "cross-env": "^7.0.3",
     "css-loader": "^6.5.1",
     "html-webpack-plugin": "^5.5.0",
+    "jest": "^27.4.3",
     "mini-css-extract-plugin": "^2.4.5",
+    "msw": "^0.36.2",
     "nodemon": "^2.0.15",
     "react-router": "^6.0.2",
+    "react-test-renderer": "^17.0.2",
+    "regenerator-runtime": "^0.13.9",
     "sass": "^1.44.0",
     "sass-loader": "^12.3.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.64.4",
     "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.6.0"
+    "webpack-dev-server": "^4.6.0",
+    "whatwg-fetch": "^3.6.2"
   }
 }
