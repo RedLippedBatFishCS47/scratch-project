@@ -5,7 +5,7 @@ import MessageDisplay from './component/MessageDisplay.js';
 const App = () => {
   return(
     <div> 
-        <h1>TEEN ZONE CHAT ROOM</h1>
+        <h1>CHAT ZONE</h1>
         <MessageDisplay />
     </div>
   )
