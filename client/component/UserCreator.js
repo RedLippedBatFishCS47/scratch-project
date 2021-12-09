@@ -30,7 +30,7 @@ const UserCreator = (props) => {
     document.getElementById("UserLogin").style.display = "block";
   }
   return (
-    <div id="UserCreator" style={{ display: "none" }}>
+    <div id="UserCreator" style={{ display: "block" }}>
 
       <h2>Register please, chatter!</h2>
       <input
