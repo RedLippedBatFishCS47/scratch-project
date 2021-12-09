@@ -12,6 +12,7 @@ const UserCreator = (props) => {
       }),
       headers: { "Content-Type": "application/json" },
     }).then((response) => {
+      console.log(response.status)
       if(response.status===200){
         console.log(response)
         console.log('registration completed')
@@ -21,6 +22,7 @@ const UserCreator = (props) => {
         document.getElementById("UserCreator").style.display = "none";
         // document.getElementById("MessageDisplay").style.display = "block";
       } else{
+        console.log(response)
         document.getElementById("registerfailed").style.display = "block";
       }
     });

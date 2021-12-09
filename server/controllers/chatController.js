@@ -1,5 +1,10 @@
 const db = require("../models/userModel");
 const uuid = require("uuid");
+const moment = require('moment');
+const events = require('events');
+
+
+const messageEventEmitter = new events.EventEmitter();
 
 const chatController = {};
 
@@ -13,7 +18,6 @@ chatController.getMessages = (req, res, next) => {
   db.query(text)
     .then((response) => {
       res.locals.messages = response.rows.map((entry) => {
-        console.log(entry.session_id, req.cookies.session_id);
         const permission = entry.session_id === req.cookies.session_id;
         const { id, content, time_stamp, username, edit } = entry;
         return {
@@ -25,11 +29,11 @@ chatController.getMessages = (req, res, next) => {
           edit,
         };
       });
-      next();
+      return next();
     })
     .catch((err) => {
       console.error(err);
-      next(err);
+      return next(err);
     });
 };
 
@@ -41,11 +45,11 @@ chatController.postMessages = (req, res, next) => {
 
   db.query(text, values)
     .then((response) => {
-      next();
+      return next();
     })
     .catch((err) => {
       console.error(err);
-      next(err);
+      return next(err);
     });
 };
 
@@ -61,11 +65,11 @@ chatController.updateMessage = (req, res, next) => {
     .then((response) => {
       // console.log("this is response rows", response.rows);
       // res.locals.updatedMessage = response.rows;
-      next();
+      return next();
     })
     .catch((err) => {
       console.error(err);
-      next(err);
+      return next(err);
     });
 };
 
@@ -76,11 +80,11 @@ chatController.deleteMessage = (req, res, next) => {
 
   db.query(text, values)
     .then((response) => {
-      next();
+      return next();
     })
     .catch((err) => {
       console.error(err);
-      next(err);
+      return next(err);
     });
 };
 
@@ -100,11 +104,11 @@ chatController.setSessionCookie = (req, res, next) => {
         secure: true,
       });
       res.cookie("username", req.body.username);
-      next();
+      return next();
     })
     .catch((err) => {
       console.error(err);
-      next(err);
+      return next(err);
     });
 };
 
@@ -127,7 +131,7 @@ chatController.authorizeSession = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
-      next(err);
+      return next(err);
     });
 };
 
@@ -152,8 +156,22 @@ chatController.authorizeSessionForMessage = (req, res, next) => {
     })
     .catch((err) => {
       console.error(err);
-      next(err);
+      return next(err);
     });
 };
+
+
+chatController.longPolling = (req, res, next) => {
+  console.log(`${moment()} - Waiting for new message...`);
+  messageEventEmitter.once('newMessage', () => {
+    return next();
+  })
+}
+
+chatController.triggerLongPoll = (req, res, next) => {
+  console.log('reached trigger for long polling');
+  messageEventEmitter.emit('newMessage');
+  return next();
+}
 
 module.exports = chatController;

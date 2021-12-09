@@ -36,7 +36,23 @@ const MessageDisplay = () => {
         console.log(res);
         return res;
       })
-      .then(setState)
+      .then((data) => {
+        setState(data);
+      })
+      .catch((err) => console.log("Get Messages: ERROR", err));
+  }
+
+  function fetchMessagesLongPolling() {
+    fetch("/api/messagesLongPolling")
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        return res;
+      })
+      .then((data) => {
+        setState(data);
+        fetchMessages();
+      })
       .catch((err) => console.log("Get Messages: ERROR", err));
   }
 
@@ -75,6 +91,7 @@ const MessageDisplay = () => {
   }
 
   useEffect(fetchMessages, []);
+  useEffect(fetchMessagesLongPolling, []);
 
   messages.push(
     <tr>
