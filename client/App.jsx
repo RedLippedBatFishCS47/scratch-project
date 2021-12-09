@@ -1,14 +1,23 @@
 import React from "react";
-import { Outlet, Link } from "react-router-dom";
+import { Outlet, Link, NavLink } from "react-router-dom";
 
 const App = () => {
   return (
     <div>
-      <h1>CHAT ZONE</h1>
-      <nav>
-        <Link to="/secretPage">A Different Page</Link>
-      </nav>
-      <Outlet/>
+      <h1 className="title">
+        C
+        <NavLink
+          to="/secretPage"
+          className="title"
+          style={({ isActive }) =>
+            isActive ? { display: "none" } : { textDecoration: "none" }
+          }
+        >
+          H
+        </NavLink>
+        AT ZONE
+      </h1>
+      <Outlet />
     </div>
   );
 };

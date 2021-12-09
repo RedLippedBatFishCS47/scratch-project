@@ -1,4 +1,5 @@
 import React from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const UserLogin = (props) => {
@@ -17,11 +18,7 @@ const UserLogin = (props) => {
     }).then((response) => {
       if (response.status === 200) {
         console.log(response);
-        //what happens if dupe username?
-        //otherwise, if we login the user...then what?
-        props.fetchMessages();
-        document.getElementById("UserLogin").style.display = "none";
-        document.getElementById("MessageDisplay").style.display = "block";
+        navigate("/chatroom");
       } else {
         console.log("login failed");
         document.getElementById("loginfailed").style.display = "block";
@@ -29,11 +26,22 @@ const UserLogin = (props) => {
     });
   }
 
+// if the browser has a cookie, redirect to chatroom instead
+  useEffect(() => {
+    if (document.cookie) navigate("/chatroom");
+  });
+
   const redirectToSignUp = () => {
     navigate("/signup");
-    // document.getElementById("UserCreator").style.display = "block";
-    // document.getElementById("UserLogin").style.display = "none";
   };
+  // if when the page first renders, if the broswer has a cookie
+  // redirect to chatroom
+  // if (document.cookie !== "") {
+  //   console.log('testing to see if/when this fires"');
+  //   console.log(document.cookie);
+  //   navigate("/chatroom");
+  // }
+
   return (
     <div id="UserLogin" style={{ display: "block" }}>
       <h2>Login</h2>
