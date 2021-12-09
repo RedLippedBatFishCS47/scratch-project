@@ -72,4 +72,12 @@ router.post(
   }
 );
 
+router.get("/profiles/:username", userController.userProfile, (req, res) => {
+  res.status(200).json(res.locals.profile);
+});
+
+router.patch("/profiles/:username", userController.editProfile, (req, res) => {
+  res.sendStatus(200);
+});
+
 module.exports = router;
