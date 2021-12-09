@@ -44,5 +44,38 @@ userController.verifyUser = (req, res, next) => {
         })
 };
 
+userController.userProfile = (req, res, next) => {
+    const { session_id } = req.cookies;
+    const params = [session_id];
+    const text = 
+      `SELECT username, nickname, about_me
+      FROM users
+      WHERE session_id = $1;`;
+    db.query(text, params)
+      .then((response) => {
+        res.locals.profile = response.rows[0];
+        return next();
+      })
+      .catch((err) => {
+        console.log(err);
+        return next(err);
+      });
+  };
+  
+  userController.editProfile = (req, res, next) => {
+    const { aboutMe, nickname } = req.body;
+    const { session_id } = req.cookies;
+    const text = `UPDATE users SET about_me=$1, nickname=$2 where session_id=$3;`;
+    db.query(text, params)
+      .then((response) => {
+          return next();
+      })
+      .catch((err) => {
+          console.log(err);
+          return next(err);
+      })
+  };
+  
+
 
 module.exports = userController;
