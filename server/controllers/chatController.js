@@ -1,5 +1,10 @@
 const db = require("../models/userModel");
 const uuid = require("uuid");
+const moment = require('moment');
+const events = require('events');
+
+
+const messageEventEmitter = new events.EventEmitter();
 
 const chatController = {};
 
@@ -154,5 +159,19 @@ chatController.authorizeSessionForMessage = (req, res, next) => {
       return next(err);
     });
 };
+
+
+chatController.longPolling = (req, res, next) => {
+  console.log(`${moment()} - Waiting for new message...`);
+  messageEventEmitter.once('newMessage', () => {
+    return next();
+  })
+}
+
+chatController.triggerLongPoll = (req, res, next) => {
+  console.log('reached trigger for long polling');
+  messageEventEmitter.emit('newMessage');
+  return next();
+}
 
 module.exports = chatController;

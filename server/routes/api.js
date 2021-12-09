@@ -1,8 +1,11 @@
 const express = require("express");
 const chatController = require("../controllers/chatController");
 const userController = require("../controllers/userController");
-
+// const EventEmitter = require('../events')
+const events = require('events');
+const { decodeBase64 } = require("bcryptjs");
 const router = new express.Router();
+
 
 // Queries DB and responds with a list of objects for all messages
 // also sets a session cookie if one does not exist
@@ -12,12 +15,23 @@ router.get(
   chatController.getMessages,
   (req, res) => {
     res.status(200).json(res.locals.messages);
-  }
-);
+});
+
+router.get(
+  "/messagesLongPolling/",
+  chatController.longPolling,
+  chatController.getMessages,
+  (req, res) => {
+    res.status(200).json(res.locals.messages);
+});
 
 // Adds new message from request to DB and respond with the new message
-router.post("/messages", chatController.postMessages, (req, res) => {
-  chatController.authorizeSession, res.status(200).redirect("/"); //delete after long polling
+router.post("/messages", 
+  chatController.triggerLongPoll,
+  chatController.postMessages, 
+  chatController.authorizeSession, 
+  (req, res) => {
+    res.status(200).redirect("/"); //delete after long polling
 });
 
 // Update a message in the DB and respond with the updated message
@@ -51,7 +65,7 @@ router.post(
 
 router.post(
   "/login",
-  userController.verifyUser,
+  userController.verifyUser,  
   chatController.setSessionCookie,
   (req, res) => {
     res.sendStatus(200);
