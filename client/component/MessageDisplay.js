@@ -28,6 +28,7 @@ const MessageDisplay = () => {
   //push messages each message object from database
   //array object
   //jsoned array object
+
   function fetchMessages() {
     console.log("attempting fetch");
     fetch("/api/messages")
@@ -38,6 +39,7 @@ const MessageDisplay = () => {
       })
       .then((data) => {
         setState(data);
+        fetchMessagesLongPolling();
       })
       .catch((err) => console.log("Get Messages: ERROR", err));
   }
@@ -51,9 +53,13 @@ const MessageDisplay = () => {
       })
       .then((data) => {
         setState(data);
-        fetchMessages();
+        fetchMessagesLongPolling();
       })
-      .catch((err) => console.log("Get Messages: ERROR", err));
+      .catch((err) => {
+        console.log(err.status);
+        // if(err.status === 504) fetchMessagesLongPolling();
+        console.log("Get Messages: ERROR", err);
+      });
   }
 
   // send delte message to back end, front end deletes message w/o need for response
@@ -81,7 +87,7 @@ const MessageDisplay = () => {
       }),
       headers: { "Content-Type": "application/json" },
     })
-      .then(() => console.log('Put successful'))
+      .then(() => console.log("Put successful"))
       .then(() => fetchMessages());
     document.getElementById(`${"editMessageInput" + el.id}`).style.display =
       "none";
@@ -91,7 +97,7 @@ const MessageDisplay = () => {
   }
 
   useEffect(fetchMessages, []);
-  useEffect(fetchMessagesLongPolling, []);
+  // useEffect(fetchMessagesLongPolling, []);
 
   messages.push(
     <tr>
@@ -101,6 +107,8 @@ const MessageDisplay = () => {
       <th>Actions</th>
     </tr>
   );
+
+  let count = 0;
 
   for (const el of state) {
     // console.log(el.id);
@@ -114,7 +122,10 @@ const MessageDisplay = () => {
     );
     if (el.edit) {
       editStatus = (
-        <span id="editedFlag" style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}>
+        <span
+          id="editedFlag"
+          style={{ display: "inline-block", padding: "0px 0px 0px 20px" }}
+        >
           (edited)
         </span>
       );
@@ -156,7 +167,7 @@ const MessageDisplay = () => {
 
     //push message components into messages, using el as the source of props
     messages.push(
-      <tr key={el.id}>
+      <tr id={count++} key={el.id}>
         <td className="timestamp">{formatDate(new Date(el.time_stamp))}</td>
         <td className="usernameMessage">{currUsername}</td>
         <td className="messageContents">
@@ -189,7 +200,7 @@ const MessageDisplay = () => {
       <div>
         <div id="MessageContent">
           <div id="MessageDisplay">
-            <table>
+            <table id="chatroom">
               <tbody>{messages}</tbody>
             </table>
             <br />
