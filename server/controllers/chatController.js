@@ -1,8 +1,7 @@
 const db = require("../models/userModel");
 const uuid = require("uuid");
-const moment = require('moment');
-const events = require('events');
-
+const moment = require("moment");
+const events = require("events");
 
 const messageEventEmitter = new events.EventEmitter();
 
@@ -160,18 +159,25 @@ chatController.authorizeSessionForMessage = (req, res, next) => {
     });
 };
 
+let counter = 0
 
 chatController.longPolling = (req, res, next) => {
   console.log(`${moment()} - Waiting for new message...`);
-  messageEventEmitter.once('newMessage', () => {
+  counter ++;
+  messageEventEmitter.once("newMessage", () => {
     return next();
-  })
-}
+  });
+};
 
 chatController.triggerLongPoll = (req, res, next) => {
-  console.log('reached trigger for long polling');
-  messageEventEmitter.emit('newMessage');
+  console.log("reached trigger for long polling");
+  console.log('here is our counter', counter)
+  for (let i = 0; i < counter; i++) {
+    messageEventEmitter.emit("newMessage");
+  }
+  counter = 0;
+  console.log('here is counter after emit', counter)
   return next();
-}
+};
 
 module.exports = chatController;
