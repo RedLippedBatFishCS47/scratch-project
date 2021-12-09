@@ -174,7 +174,7 @@ const MessageDisplay = () => {
 
   return (
     <div>
-      <button onClick={logout}>Logout</button>
+      <button className="submitButton" style={{float: "right"}} onClick={logout}>Logout</button>
       <div id="MessageContent">
         <div id="MessageDisplay">
           <table>
