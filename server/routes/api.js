@@ -5,6 +5,7 @@ const userController = require("../controllers/userController");
 const events = require("events");
 const { decodeBase64 } = require("bcryptjs");
 const router = new express.Router();
+require('dotenv').config();
 
 // Queries DB and responds with a list of objects for all messages
 // also sets a session cookie if one does not exist
@@ -77,12 +78,32 @@ router.post(
   }
 );
 
-router.get("/profiles/:username", userController.userProfile, (req, res) => {
+router.get(
+  "/profiles/:username", 
+  userController.userProfile, 
+  (req, res) => {
   res.status(200).json(res.locals.profile);
 });
 
-router.patch("/profiles/:username", userController.editProfile, (req, res) => {
+router.patch(
+  "/profiles/:username", 
+  userController.editProfile, 
+  (req, res) => {
   res.sendStatus(200);
 });
+
+router.get(
+  "/auth",
+  (req, res) => {
+    res.redirect(`https://github.com/login/oauth/authorize?client_id=${process.env.CLIENT_ID}&scope=read:user`)
+  }
+)
+
+router.get("/oauth",
+  userController.oAuth,
+  (req, res) => {
+    res.sendStatus(200);
+  }
+)
 
 module.exports = router;
