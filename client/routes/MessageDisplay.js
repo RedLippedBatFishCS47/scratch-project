@@ -1,34 +1,25 @@
 import React, { Component, useEffect, setState, useState } from "react";
-import MessageInput from "./MessageInput";
-import UserCreator from "./UserCreator";
-import UserLogin from "./UserLogin";
+import MessageInput from "../component/MessageInput";
 import dateFormat from "dateformat";
+import { useNavigate } from "react-router-dom";
 
-//need to store array of message somehow, either here or in separate file
-
-//username
-
-//content input
-
-//fetch in the app?
-//assume we get the array of messages as a prop
-
-function formatDate(d) {
-  //const datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +
-  //      d.getHours() + ":" + d.getMinutes();
-  const pstDate = new Date(Number(d) + 8 * 60 * 60 * 1000);
-  return dateFormat(pstDate, "yyyy/mm/d h:MM TT");
-}
 
 const MessageDisplay = () => {
-  //messages is an array of Message components
   const [state, setState] = useState([]);
-  const messages = [];
-  let editMessageId = null; //if there is an Id here, the message with that Id will render with an input box
-  //push messages each message object from database
-  //array object
-  //jsoned array object
+  let navigate = useNavigate();
 
+  useEffect(() => {
+    // if no cookies then user is not logged in, send them to login
+    if (document.cookie === "") navigate("/");
+  });
+
+  function formatDate(d) {
+    //const datestring = d.getDate()  + "-" + (d.getMonth()+1) + "-" + d.getFullYear() + " " +
+    //      d.getHours() + ":" + d.getMinutes();
+    const pstDate = new Date(Number(d) + 8 * 60 * 60 * 1000);
+    return dateFormat(pstDate, "yyyy/mm/d h:MM TT");
+  }
+  
   function fetchMessages() {
     console.log("attempting fetch");
     fetch("/api/messages")
@@ -61,8 +52,11 @@ const MessageDisplay = () => {
         console.log("Get Messages: ERROR", err);
       });
   }
+  
+  useEffect(fetchMessages, []);
+  useEffect(fetchMessagesLongPolling, []);
 
-  // send delte message to back end, front end deletes message w/o need for response
+  // send delete message to back end, front end deletes message w/o need for response
   function deleteMessage(el) {
     fetch("/api/messages/" + el.id, { method: "DELETE" })
       .then(() => console.log("Delete Successful"))
@@ -70,15 +64,13 @@ const MessageDisplay = () => {
       .catch((err) => console.log("Delete Message: ERROR: ", err));
   }
 
-  //redraw the page with the input box
-  //if we want to have a modal invisibly generated for each element of the state
-  //we need editMessage to toggle it visible
   function editMessage(el) {
     document.getElementById(`editMessageInput${el.id}`).style.display = "block";
     document.getElementById(`message${el.id}`).style.display = "none";
     document.getElementById("edit" + el.id).style.display = "none";
     document.getElementById("saveChanges" + el.id).style.display = "block";
   }
+
   function updateMessage(el) {
     fetch("/api/messages/" + el.id, {
       method: "PUT",
@@ -96,9 +88,7 @@ const MessageDisplay = () => {
     document.getElementById("edit" + el.id).style.display = "block";
   }
 
-  useEffect(fetchMessages, []);
-  // useEffect(fetchMessagesLongPolling, []);
-
+  const messages = [];
   messages.push(
     <tr>
       <th>Date</th>
@@ -111,9 +101,6 @@ const MessageDisplay = () => {
   let count = 0;
 
   for (const el of state) {
-    // console.log(el.id);
-    let buttons = <td></td>;
-    let editButton = <td></td>;
     let actionButtons = <td></td>;
     let editStatus = (
       <span
@@ -184,37 +171,32 @@ const MessageDisplay = () => {
       </tr>
     );
   }
-  let checkCookie = document.cookie; // ''
-  let pageContent = <div></div>;
 
-  // IF COOKIE IS EMPTY, RENDER LOGIN/SIGN UP. OTHERWISE, RENDER MESSAGES
-  if (checkCookie === "") {
-    pageContent = (
-      <div>
-        <UserLogin fetchMessages={fetchMessages} />
-        <UserCreator fetchMessages={fetchMessages} />
-      </div>
-    );
-  } else {
-    pageContent = (
-      <div>
-        <div id="MessageContent">
-          <div id="MessageDisplay">
-            <table id="chatroom">
-              <tbody>{messages}</tbody>
-            </table>
-            <br />
-          </div>
+  const logout = () => {
+    // remove cookies 'username' and 'session_id' then navigate home
+    document.cookie = "username=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+    document.cookie = "session_id=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+    navigate("/");
+  };
+
+  return (
+    <div>
+      <button className="submitButton" style={{float: "right"}} onClick={logout}>Logout</button>
+      <div id="MessageContent">
+        <div id="MessageDisplay">
+          <table>
+            <tbody>{messages}</tbody>
+          </table>
+          <br />
         </div>
-        <MessageInput
-          state={state}
-          setState={setState}
-          fetchMessages={fetchMessages}
-        />
       </div>
-    );
-  }
-  return <div>{pageContent}</div>;
+      <MessageInput
+        state={state}
+        setState={setState}
+        fetchMessages={fetchMessages}
+      />
+    </div>
+  );
 };
 
 export default MessageDisplay;
